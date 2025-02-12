@@ -569,9 +569,9 @@ You can create notifications with a count up/down timer (chronometer) by passing
 Do note that the notification will not disappear when the timer reaches 0. Instead, it will continue decrementing into negative values.
 You may want to utilize [notification timeouts](#notification-timeout) or [replace the notification](#replacing) when the timer hits zero.
 
-- chronometer - true to enable chronometer mode
-- when - the timestamp to count up or down to (seconds since 01/01/1970)
-- when_relative - true makes the value of "when" relative in seconds like "timeout"
+- `chronometer` - `true` to enable chronometer mode
+- `when` - the timestamp (seconds since 01/01/1970) to count up or down to. This value is required to be an integer.
+- `when_relative` - `true` makes the value of `when` relative to the current time, in seconds, like [timeout](#notification-timeout) (defaults to `false`)
 
 ```yaml
 automation:
@@ -587,8 +587,17 @@ automation:
           data:
             timeout: 120
             chronometer: true
-            when: 120
-            when_relative: true
+            when: '{{ ( as_timestamp(now()) + 120 ) | int }}'
+            when_relative: false
+```
+
+It is possible to send a notification with the chronometer counting up from by setting `when: '{{ as_timestamp(now()) | int }}'`.
+
+```yaml
+          data:
+            chronometer: true
+            when: -1
+            when_relative: false
 ```
 
 ### Progress Notifications
